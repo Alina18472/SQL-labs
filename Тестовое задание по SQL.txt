@@ -1,0 +1,48 @@
+Есть БД с 3 таблицами:
+1. Таблица FIO_person содержит атрибуты:
+ ID (id сотрудника)
+ FIO (ФИО сотрудника)
+
+2. Таблица Salary содержит атрибуты:
+ Salary_ID (id записи по ЗП)
+ Person_ID (внешний ключ к таблице FIO_person)
+ Value (ЗП сотрудника)
+
+3. Таблица JobPosition содержит атрибуты:
+ Position_ID (id записи по должности)
+ Person_ID (внешний ключ к таблице FIO_person)
+ NamePosition (название должности)
+ Duration (количество лет в должности) 
+
+
+1. Получить список всех сотрудников с ФИО Петров Максим Егорович
+
+SELECT * FROM FIO_person
+WHERE FIO ='Петров Максим Егорович';
+
+2. Получить список всех сотрудников по имени Иван
+
+SELECT * FROM FIO_person
+WHERE FIO LIKE '% Иван %';
+
+3. Получить список всех ФИО сотрудников в должности «Разработчик» и зарплатой, большей
+10 000 рублей
+
+SELECT FIO FROM FIO_person 
+JOIN Salary ON FIO_person.ID = Salary.Person_ID 
+JOIN JobPosition ON FIO_person.ID = JobPosition.Person_ID
+WHERE JobPosition.NamePosition = 'Разработчик' AND Salary.Value >10000;
+
+4. Получить отсортированный в алфавитном порядке список всех существующих должностей
+(без повторов) в компании
+
+SELECT DISTINCT NamePosition FROM JobPosition
+ORDER BY NamePosition asc;
+
+5. Вывести список, содержащий ФИО, ЗП, должность и количество лет в должности для
+сотрудников, которые проработали от 1 до 10 лет включительно
+
+SELECT FIO, Value, NamePosition, Duration FROM FIO_person
+JOIN Salary on FIO_person.ID = Salary.Person_ID
+JOIN JobPosition on FIO_person.ID = JobPosition.Person_ID
+WHERE JobPosition.Duration BETWEEN 1 AND 10;
